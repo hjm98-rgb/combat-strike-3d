@@ -26,7 +26,6 @@ jobs:
           mkdir -p "$TEMPLATE_DIR"
           unzip -o Godot_v4.2.1-stable_export_templates.tpz -d /tmp/templates
           cp -r /tmp/templates/templates/* "$TEMPLATE_DIR/"
-          ls -la "$TEMPLATE_DIR/"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -40,7 +39,7 @@ jobs:
             -dname "CN=Android Debug,O=Android,C=US" -validity 10000
 
       - name: Import Project
-        run: godot --headless --import
+        run: timeout 120 godot --headless --import --quit || true
 
       - name: Build Android APK
         run: |
