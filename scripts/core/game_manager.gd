@@ -1,5 +1,5 @@
 extends Node
-## GameManager - Global game state
+## GameManager - Global game state with weapon upgrades
 
 signal scene_changed(scene_path: String)
 signal player_stats_changed
@@ -19,7 +19,8 @@ var total_deaths: int = 0
 var wins: int = 0
 var losses: int = 0
 var selected_weapon: String = "rifle_ak47"
-var owned_weapons: Array = ["rifle_ak47"]
+var owned_weapons: Dictionary = {}
+var weapon_kills: Dictionary = {}
 var maps_unlocked: Array = ["urban"]
 var current_map: String = "urban"
 var current_mode: String = "team_deathmatch"
@@ -43,6 +44,8 @@ var game_modes: Dictionary = {
 
 func _ready() -> void:
 	detect_platform()
+	owned_weapons["rifle_ak47"] = {"level": 1, "stars": 0}
+	weapon_kills["rifle_ak47"] = 0
 	SaveSystem.load_game()
 
 func detect_platform() -> void:
@@ -55,12 +58,13 @@ func change_scene(scene_path: String) -> void:
 	get_tree().change_scene_to_file(scene_path)
 	scene_changed.emit(scene_path)
 
-func add_kill() -> void:
+func add_kill(weapon_id: String = "") -> void:
 	total_kills += 1
 	match_kills += 1
 	match_score += 1
+	if weapon_id != "":
+		weapon_kills[weapon_id] = weapon_kills.get(weapon_id, 0) + 1
 	_recalc_kd()
-	match_score_changed.emit()
 	SaveSystem.save_game()
 
 func add_death() -> void:
@@ -91,10 +95,29 @@ func purchase_weapon(weapon_id: String, cost: int) -> bool:
 	if owned_weapons.has(weapon_id): return false
 	if credits >= cost:
 		credits -= cost
-		owned_weapons.append(weapon_id)
+		owned_weapons[weapon_id] = {"level": 1, "stars": 0}
+		weapon_kills[weapon_id] = 0
 		SaveSystem.save_game()
 		return true
 	return false
+
+func upgrade_weapon(weapon_id: String) -> Dictionary:
+	if not owned_weapons.has(weapon_id): return {"success": false, "reason": "未拥有"}
+	var w: Dictionary = owned_weapons[weapon_id]
+	var cost: int = w.level * 500
+	if credits < cost: return {"success": false, "reason": "金币不足"}
+	if w.level >= 10: return {"success": false, "reason": "已满级"}
+	credits -= cost
+	w.level += 1
+	if w.level % 3 == 0: w.stars += 1
+	owned_weapons[weapon_id] = w
+	SaveSystem.save_game()
+	return {"success": true, "new_level": w.level, "cost": cost}
+
+func get_weapon_level(weapon_id: String) -> int:
+	if owned_weapons.has(weapon_id):
+		return owned_weapons[weapon_id].level
+	return 0
 
 func select_weapon(weapon_id: String) -> void:
 	if owned_weapons.has(weapon_id):
