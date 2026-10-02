@@ -1,0 +1,128 @@
+[gd_scene load_steps=10 format=3 uid="uid://map_urban"]
+
+[ext_resource type="Script" path="res://scripts/player/fps_controller.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ai/bot_ai.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/hud_controller.gd" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/game/player.tscn" id="4"]
+[ext_resource type="Environment" path="res://assets/environments/default_env.tres" id="5"]
+
+[sub_resource type="BoxMesh" id="floor_mesh"]
+size = Vector3(60, 0.5, 60)
+
+[sub_resource type="BoxShape3D" id="floor_col"]
+size = Vector3(60, 0.5, 60)
+
+[sub_resource type="BoxMesh" id="bldg1_mesh"]
+size = Vector3(8, 6, 8)
+
+[sub_resource type="BoxShape3D" id="bldg1_col"]
+size = Vector3(8, 6, 8)
+
+[sub_resource type="BoxMesh" id="bldg2_mesh"]
+size = Vector3(6, 8, 6)
+
+[sub_resource type="BoxShape3D" id="bldg2_col"]
+size = Vector3(6, 8, 6)
+
+[sub_resource type="BoxMesh" id="barrier_mesh"]
+size = Vector3(3, 1.2, 0.5)
+
+[sub_resource type="BoxShape3D" id="barrier_col"]
+size = Vector3(3, 1.2, 0.5)
+
+[node name="UrbanMap" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("5")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.5, -0.7, 0.5, 0.2, 0.6, 0.8, -0.8, -0.4, 0.4, 0, 15, 0)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("floor_mesh")
+transform.origin.y = -0.25
+
+[node name="FloorCol" type="StaticBody3D" parent="Floor"]
+[node name="Shape" type="CollisionShape3D" parent="Floor/FloorCol"]
+shape = SubResource("floor_col")
+
+[node name="Building1" type="MeshInstance3D" parent="."]
+mesh = SubResource("bldg1_mesh")
+transform.origin = Vector3(-15, 3, -10)
+
+[node name="B1Col" type="StaticBody3D" parent="Building1"]
+[node name="Shape" type="CollisionShape3D" parent="Building1/B1Col"]
+shape = SubResource("bldg1_col")
+
+[node name="Building2" type="MeshInstance3D" parent="."]
+mesh = SubResource("bldg2_mesh")
+transform.origin = Vector3(12, 4, -12)
+
+[node name="B2Col" type="StaticBody3D" parent="Building2"]
+[node name="Shape" type="CollisionShape3D" parent="Building2/B2Col"]
+shape = SubResource("bldg2_col")
+
+[node name="Barrier1" type="MeshInstance3D" parent="."]
+mesh = SubResource("barrier_mesh")
+transform.origin = Vector3(0, 0.6, -5)
+
+[node name="Barrier1Col" type="StaticBody3D" parent="Barrier1"]
+[node name="Shape" type="CollisionShape3D" parent="Barrier1/Barrier1Col"]
+shape = SubResource("barrier_col")
+
+[node name="SpawnPoint" type="Node3D" parent="."]
+transform.origin = Vector3(0, 1, 15)
+
+[node name="Player" parent="." instance=ExtResource("4")]
+transform.origin = Vector3(0, 1, 15)
+
+[node name="Bots" type="Node3D" parent="."]
+
+[node name="Bot1" type="CharacterBody3D" parent="Bots"]
+script = ExtResource("2")
+transform.origin = Vector3(-10, 1, -10)
+
+[node name="Bot2" type="CharacterBody3D" parent="Bots"]
+script = ExtResource("2")
+transform.origin = Vector3(10, 1, -10)
+
+[node name="Bot3" type="CharacterBody3D" parent="Bots"]
+script = ExtResource("2")
+transform.origin = Vector3(0, 1, -15)
+
+[node name="HUD" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("3")
+mouse_filter = 2
+
+[node name="HealthBar" type="ProgressBar" parent="HUD"]
+offset_left = 20.0
+offset_top = -40.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+custom_minimum_size = Vector2(200, 25)
+max_value = 100
+value = 100
+
+[node name="AmmoLabel" type="Label" parent="HUD"]
+offset_left = -150.0
+offset_top = -40.0
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+theme_override_font_sizes/font_size = 24
+text = "30 / 90"
+horizontal_alignment = 2
+
+[node name="ScoreLabel" type="Label" parent="HUD"]
+offset_left = -50.0
+offset_top = 10.0
+anchor_left = 0.5
+anchor_right = 0.5
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
+text = "我方: 0"

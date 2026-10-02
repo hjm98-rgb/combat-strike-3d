@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://tutorial_scene"]
+
+[ext_resource type="Script" path="res://scripts/ui/tutorial_controller.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/game/player.tscn" id="2"]
+
+[sub_resource type="BoxMesh" id="floor_mesh"]
+size = Vector3(30, 0.5, 30)
+
+[sub_resource type="BoxShape3D" id="floor_col"]
+size = Vector3(30, 0.5, 30)
+
+[sub_resource type="BoxMesh" id="wall_mesh"]
+size = Vector3(30, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="cover_mesh"]
+size = Vector3(2, 1.5, 1)
+
+[node name="TutorialScene" type="Node3D"]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.7, -0.5, 0.5, 0, 0.7, 0.7, -0.7, -0.5, 0.5, 0, 10, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("floor_mesh")
+transform.origin.y = -0.25
+
+[node name="FloorCol" type="StaticBody3D" parent="Floor"]
+[node name="Shape" type="CollisionShape3D" parent="Floor/FloorCol"]
+shape = SubResource("floor_col")
+
+[node name="WallN" type="MeshInstance3D" parent="."]
+mesh = SubResource("wall_mesh")
+transform.origin = Vector3(0, 1.5, -15)
+
+[node name="CoverBlock" type="MeshInstance3D" parent="."]
+mesh = SubResource("cover_mesh")
+transform.origin = Vector3(5, 0.75, 0)
+
+[node name="SpawnPoint" type="Node3D" parent="."]
+transform.origin = Vector3(0, 1, 10)
+
+[node name="Player" parent="." instance=ExtResource("2")]
+transform.origin = Vector3(0, 1, 10)
+
+[node name="CommanderPanel" type="PanelContainer" parent="."]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 400.0
+offset_bottom = 300.0
+
+[node name="VBox" type="VBoxContainer" parent="CommanderPanel"]
+
+[node name="NameLabel" type="Label" parent="CommanderPanel/VBox"]
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+text = "指挥官 华莱士"
+
+[node name="DialogBox" type="RichTextLabel" parent="CommanderPanel/VBox"]
+custom_minimum_size = Vector2(0, 150)
+bbcode_enabled = true
+
+[node name="NextButton" type="Button" parent="CommanderPanel/VBox"]
+text = "下一步 >>"
+
+[node name="ObjectiveLabel" type="Label" parent="."]
+offset_left = 600.0
+offset_top = 10.0
+offset_right = 900.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
+text = "训练目标"
