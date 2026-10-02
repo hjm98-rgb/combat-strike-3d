@@ -26,7 +26,6 @@ jobs:
           mkdir -p "$TEMPLATE_DIR"
           unzip -o Godot_v4.2.1-stable_export_templates.tpz -d /tmp/templates
           cp -r /tmp/templates/templates/* "$TEMPLATE_DIR/"
-          ls "$TEMPLATE_DIR/"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -40,13 +39,17 @@ jobs:
             -dname "CN=Android Debug,O=Android,C=US" -validity 10000
 
       - name: Import Project
-        run: timeout 120 godot --headless --import --quit || true
+        run: godot --headless --import --quit
 
       - name: Build Android APK
         run: |
           mkdir -p build/android
           godot --headless --export-debug "Android" build/android/CombatStrike3D.apk
           ls -la build/android/
+          if [ ! -f build/android/CombatStrike3D.apk ]; then
+            echo "ERROR: Export did not produce apk file"
+            exit 1
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
