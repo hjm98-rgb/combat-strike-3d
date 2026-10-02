@@ -26,6 +26,7 @@ jobs:
           mkdir -p "$TEMPLATE_DIR"
           unzip -o Godot_v4.2.1-stable_export_templates.tpz -d /tmp/templates
           cp -r /tmp/templates/templates/* "$TEMPLATE_DIR/"
+          ls "$TEMPLATE_DIR/"
 
       - name: Import Project
         run: timeout 120 godot --headless --import --quit || true
@@ -34,6 +35,7 @@ jobs:
         run: |
           mkdir -p build/windows
           godot --headless --export-release "Windows Desktop" build/windows/CombatStrike3D.exe
+          ls -la build/windows/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

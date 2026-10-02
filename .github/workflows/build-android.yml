@@ -26,6 +26,7 @@ jobs:
           mkdir -p "$TEMPLATE_DIR"
           unzip -o Godot_v4.2.1-stable_export_templates.tpz -d /tmp/templates
           cp -r /tmp/templates/templates/* "$TEMPLATE_DIR/"
+          ls "$TEMPLATE_DIR/"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -45,9 +46,10 @@ jobs:
         run: |
           mkdir -p build/android
           godot --headless --export-debug "Android" build/android/CombatStrike3D.apk
+          ls -la build/android/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: CombatStrike3D-Android
-          path: build/android/*.apk
+          path: build/android/*
