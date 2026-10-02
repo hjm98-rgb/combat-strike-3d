@@ -1,0 +1,27 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Godot 4.2
+        uses: chickensoap/setup-godot@v1
+        with:
+          version: 4.2.1
+          type: standard
+      - name: Build Windows
+        run: |
+          mkdir -p build/windows
+          godot --headless --export-release "Windows Desktop" build/windows/CombatStrike3D.exe
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CombatStrike3D-Windows
+          path: build/windows/*

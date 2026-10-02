@@ -1,0 +1,27 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Godot 4.2
+        uses: chickensoap/setup-godot@v1
+        with:
+          version: 4.2.1
+          type: standard
+      - name: Build iOS IPA
+        run: |
+          mkdir -p build/ios
+          godot --headless --export-release "iOS" build/ios/CombatStrike3D.ipa
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: CombatStrike3D-iOS
+          path: build/ios/*.ipa

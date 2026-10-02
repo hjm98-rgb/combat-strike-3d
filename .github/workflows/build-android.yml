@@ -1,0 +1,31 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Godot 4.2
+        uses: chickensoap/setup-godot@v1
+        with:
+          version: 4.2.1
+          type: standard
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-33 build-tools;33.0.0'
+      - name: Build Android APK
+        run: |
+          mkdir -p build/android
+          godot --headless --export-debug "Android" build/android/CombatStrike3D.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CombatStrike3D-Android
+          path: build/android/*.apk
