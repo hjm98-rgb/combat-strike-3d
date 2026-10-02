@@ -37,7 +37,7 @@ func _next_step() -> void:
 	_show_step(current_step + 1)
 
 func _complete_tutorial() -> void:
-	GameManager.set_meta("tutorial_completed", true)
+	GameManager.set_save_data("tutorial_completed", true)
 	SaveSystem.save_game()
 	GameManager.add_credits(300)
 	GameManager.add_xp(500)

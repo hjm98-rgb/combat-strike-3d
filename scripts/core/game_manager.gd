@@ -148,10 +148,10 @@ func end_match(did_win: bool) -> Dictionary:
 	SaveSystem.save_game()
 	return {"win": did_win, "kills": match_kills, "deaths": match_deaths, "kd": float(match_kills)/max(match_deaths,1), "credits": 500 if did_win else 200, "xp": 800 if did_win else 300, "mode": game_modes[current_mode]["name"], "map": current_map}
 
-func get_meta(key: String, default=null):
+func get_save_data(key: String, default=null):
 	return SaveSystem.get_data(key, default)
 
-func set_meta(key: String, value) -> void:
+func set_save_data(key: String, value) -> void:
 	SaveSystem.set_data(key, value)
 	SaveSystem.save_game()
 

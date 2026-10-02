@@ -18,7 +18,7 @@ func _ready() -> void:
 	AuthSystem.login_success.connect(_on_login_success)
 	AuthSystem.login_failed.connect(_on_login_failed)
 	loading_bar.visible = false
-	var saved: String = GameManager.get_meta("player_name", "")
+	var saved: String = GameManager.get_save_data("player_name", "")
 	if saved != "": name_input.text = saved
 
 func _get_name() -> String:
@@ -32,7 +32,7 @@ func _on_login_pressed() -> void:
 	var pn: String = _get_name()
 	if pn == "": return
 	GameManager.player_name = pn
-	GameManager.set_meta("player_name", pn)
+	GameManager.set_save_data("player_name", pn)
 	loading_bar.visible = true
 	status_label.text = "正在连接服务器..."
 	if tab_selector.current_tab == 1:
@@ -44,7 +44,7 @@ func _on_guest_pressed() -> void:
 	var pn: String = _get_name()
 	if pn == "": return
 	GameManager.player_name = pn
-	GameManager.set_meta("player_name", pn)
+	GameManager.set_save_data("player_name", pn)
 	loading_bar.visible = true
 	status_label.text = "正在以游客身份进入..."
 	AuthSystem.login_as_guest()
@@ -60,7 +60,7 @@ func _on_login_failed(reason: String) -> void:
 	status_label.text = "错误：" + reason
 
 func _enter_game() -> void:
-	if not GameManager.get_meta("tutorial_completed", false):
+	if not GameManager.get_save_data("tutorial_completed", false):
 		GameManager.change_scene("res://scenes/tutorial/tutorial_scene.tscn")
 	else:
 		GameManager.change_scene("res://scenes/lobby/lobby_screen.tscn")

@@ -1,8 +1,7 @@
 extends Node3D
 ## CharacterBuilder - Procedurally builds a detailed humanoid character
-## with head, torso, arms, legs, gear, and weapon viewmodel
 
-static func build_player_character(parent: Node3D, is_local: bool = false) -> Node3D:
+static func build_player_character(parent: Node3D) -> Node3D:
 	var root := Node3D.new()
 	root.name = "Character"
 	parent.add_child(root)
@@ -11,17 +10,15 @@ static func build_player_character(parent: Node3D, is_local: bool = false) -> No
 	var torso_mesh := BoxMesh.new()
 	torso_mesh.size = Vector3(0.42, 0.55, 0.25)
 	var torso_mat := StandardMaterial3D.new()
-	torso_mat.albedo_color = Color(0.25, 0.28, 0.35)  # dark tactical vest
+	torso_mat.albedo_color = Color(0.25, 0.28, 0.35)
 	torso_mat.roughness = 0.8
-	torso_mat.metallic = 0.1
-	torso_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	var torso := MeshInstance3D.new()
 	torso.mesh = torso_mesh
 	torso.material_override = torso_mat
 	torso.position = Vector3(0, 1.25, 0)
 	root.add_child(torso)
 
-	# Vest detail plate
+	# Vest
 	var vest_mesh := BoxMesh.new()
 	vest_mesh.size = Vector3(0.38, 0.35, 0.05)
 	var vest_mat := StandardMaterial3D.new()
@@ -49,7 +46,7 @@ static func build_player_character(parent: Node3D, is_local: bool = false) -> No
 	var helmet_mesh := BoxMesh.new()
 	helmet_mesh.size = Vector3(0.22, 0.12, 0.22)
 	var helmet_mat := StandardMaterial3D.new()
-	helmet_mat.albedo_color = Color(0.2, 0.25, 0.18)  # olive drab
+	helmet_mat.albedo_color = Color(0.2, 0.25, 0.18)
 	helmet_mat.roughness = 0.85
 	var helmet := MeshInstance3D.new()
 	helmet.mesh = helmet_mesh
@@ -78,9 +75,9 @@ static func build_player_character(parent: Node3D, is_local: bool = false) -> No
 	root.add_child(leg_r)
 
 	# Backpack
-	pack_mesh := BoxMesh.new()
+	var pack_mesh := BoxMesh.new()
 	pack_mesh.size = Vector3(0.3, 0.4, 0.15)
-	pack_mat := StandardMaterial3D.new()
+	var pack_mat := StandardMaterial3D.new()
 	pack_mat.albedo_color = Color(0.22, 0.2, 0.15)
 	pack_mat.roughness = 0.9
 	var backpack := MeshInstance3D.new()
@@ -102,11 +99,10 @@ static func _build_limb(size: Vector3, color: Color) -> MeshInstance3D:
 	limb.material_override = mat
 	return limb
 
-static func build_weapon_viewmodel(weapon_id: String) -> Node3D:
+static func build_weapon_viewmodel() -> Node3D:
 	var root := Node3D.new()
 	root.name = "WeaponViewModel"
 
-	# Base receiver
 	var recv_mesh := BoxMesh.new()
 	recv_mesh.size = Vector3(0.04, 0.08, 0.3)
 	var recv_mat := StandardMaterial3D.new()
@@ -119,7 +115,6 @@ static func build_weapon_viewmodel(weapon_id: String) -> Node3D:
 	recv.position = Vector3(0, 0, -0.15)
 	root.add_child(recv)
 
-	# Barrel
 	var barrel_mesh := BoxMesh.new()
 	barrel_mesh.size = Vector3(0.02, 0.02, 0.25)
 	var barrel_mat := StandardMaterial3D.new()
@@ -132,7 +127,6 @@ static func build_weapon_viewmodel(weapon_id: String) -> Node3D:
 	barrel.position = Vector3(0, 0.01, -0.42)
 	root.add_child(barrel)
 
-	# Magazine
 	var mag_mesh := BoxMesh.new()
 	mag_mesh.size = Vector3(0.03, 0.12, 0.06)
 	var mag_mat := StandardMaterial3D.new()
@@ -145,7 +139,6 @@ static func build_weapon_viewmodel(weapon_id: String) -> Node3D:
 	mag.position = Vector3(0, -0.09, -0.1)
 	root.add_child(mag)
 
-	# Grip
 	var grip_mesh := BoxMesh.new()
 	grip_mesh.size = Vector3(0.03, 0.1, 0.05)
 	var grip_mat := StandardMaterial3D.new()
@@ -157,7 +150,6 @@ static func build_weapon_viewmodel(weapon_id: String) -> Node3D:
 	grip.position = Vector3(0, -0.08, -0.02)
 	root.add_child(grip)
 
-	# Stock
 	var stock_mesh := BoxMesh.new()
 	stock_mesh.size = Vector3(0.03, 0.06, 0.15)
 	var stock_mat := StandardMaterial3D.new()
@@ -169,7 +161,6 @@ static func build_weapon_viewmodel(weapon_id: String) -> Node3D:
 	stock.position = Vector3(0, 0.01, 0.08)
 	root.add_child(stock)
 
-	# Sight/scope
 	var sight_mesh := BoxMesh.new()
 	sight_mesh.size = Vector3(0.015, 0.03, 0.08)
 	var sight_mat := StandardMaterial3D.new()
