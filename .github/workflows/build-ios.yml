@@ -19,14 +19,14 @@ jobs:
           sudo mv Godot.app /Applications/Godot.app
           sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
 
-      - name: Download Export Templates
+      - name: Download and Install Export Templates
         run: |
           wget -q https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_export_templates.tpz
-          mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.2.1.stable
-          unzip -o Godot_v4.2.1-stable_export_templates.tpz "templates/ios_*" -d /tmp/templates
-          cp /tmp/templates/templates/ios_debug.xcframework ~/Library/Application\ Support/Godot/export_templates/4.2.1.stable/
-          cp /tmp/templates/templates/ios_release.xcframework ~/Library/Application\ Support/Godot/export_templates/4.2.1.stable/
-          cp /tmp/templates/templates/version.txt ~/Library/Application\ Support/Godot/export_templates/4.2.1.stable/
+          TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/4.2.1.stable"
+          mkdir -p "$TEMPLATE_DIR"
+          unzip -o Godot_v4.2.1-stable_export_templates.tpz -d /tmp/templates
+          cp -r /tmp/templates/templates/* "$TEMPLATE_DIR/"
+          ls -la "$TEMPLATE_DIR/"
 
       - name: Import Project
         run: godot --headless --import
