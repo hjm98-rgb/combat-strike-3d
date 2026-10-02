@@ -1,6 +1,5 @@
 extends Node
 ## NetworkManager - Real online multiplayer via ENet
-## Host a game or join by IP address
 
 signal connected_to_server
 signal connection_failed(reason: String)
@@ -12,7 +11,7 @@ var is_host: bool = false
 var my_id: int = 0
 var connected: bool = false
 var host_port: int = 24200
-var max_players: int = 8
+var max_players: int = 15
 var connected_players: Dictionary = {}
 
 func host_game(port: int = 24200) -> bool:
@@ -90,7 +89,7 @@ func send_shot(origin: Vector3, direction: Vector3) -> void:
 func receive_shot(shooter_id: int, origin: Vector3, direction: Vector3) -> void:
 	pass
 
-func disconnect() -> void:
+func disconnect_network() -> void:
 	if peer:
 		peer.close()
 		multiplayer.multiplayer_peer = null

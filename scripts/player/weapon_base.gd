@@ -4,14 +4,14 @@ extends Node3D
 signal fired
 signal reloaded
 
-export var weapon_name: String = "Rifle"
-export var damage: float = 25.0
-export var fire_rate: float = 0.1
-export var magazine_size: int = 30
-export var reload_time: float = 2.5
-export var spread: float = 0.025
-export var recoil: float = 0.6
-export var is_full_auto: bool = true
+@export var weapon_name: String = "Rifle"
+@export var damage: float = 25.0
+@export var fire_rate: float = 0.1
+@export var magazine_size: int = 30
+@export var reload_time: float = 2.5
+@export var spread: float = 0.025
+@export var recoil: float = 0.6
+@export var is_full_auto: bool = true
 
 var current_ammo: int = 30
 var reserve_ammo: int = 90
